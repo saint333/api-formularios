@@ -1,7 +1,7 @@
 import {metodos} from "../../../store/dummy.js"
 import { nanoid } from 'nanoid'
 
-const TABLA = "users"
+const TABLA = "usuarios"
 
 export const controladores = (injectedStore) => {
     let metodo = injectedStore
