@@ -24,7 +24,7 @@ const multerUpload = multer({
 
 router.post("/upload", multerUpload.single("file"), (req, res) => {
     console.log(req.file);
-    success(req,res, "ok",200)
+    success(req,res,req.file,200)
 })
 
 router.get("/" , (req, res) => {
