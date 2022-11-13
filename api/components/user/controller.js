@@ -23,16 +23,6 @@ export const controladores = (injectedStore) => {
     }
 
     function actualizarUsuario(data) {
-        const user = {
-            correo: data.correo,
-            password: data.password
-        }
-
-        if(data.id){
-            user.id = data.id
-        }else{
-            user.id = nanoid()
-        }
         return metodo.actualizar(TABLA, user)
     }
 
@@ -40,11 +30,26 @@ export const controladores = (injectedStore) => {
         return metodo.borrar(TABLA, id)
     }
 
+    function guardarImagen(tabla, data) {
+        return metodo.imagen(tabla, data)
+    }
+
+    function obtenerImagenes() {
+        return metodo.getImagen("fotos_usuarios")
+    }
+
+    function sesion(tabla, id, data) {
+        return metodo.sesion(tabla,id, data.sesion)
+    }
+
     return {
         listarUsuarios,
         obtenerUsuario,
         crearUsuario,
         actualizarUsuario,
-        borrarUsuario
+        borrarUsuario,
+        guardarImagen,
+        obtenerImagenes,
+        sesion
     }
 }

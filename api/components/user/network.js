@@ -4,6 +4,14 @@ import controladores  from "./index.js"
 import multer from "multer";
 import {dirname, extname, join} from "path"
 import { fileURLToPath } from "url";
+import { v2 as cloudinary } from 'cloudinary'
+import fs from "fs-extra";
+
+cloudinary.config({ 
+    cloud_name: 'dmbma2idu', 
+  api_key: '463973851689167', 
+  api_secret: 'dzDynJt8iywkT77qC5qZSjW202o'
+});
 
 export const router = express.Router()
 const current_dir = dirname(fileURLToPath(import.meta.url))
@@ -22,9 +30,40 @@ const multerUpload = multer({
     }
 })
 
+
 router.post("/upload", multerUpload.single("file"), (req, res) => {
-    console.log(req.file);
-    success(req,res,req.file,200)
+    const uploadImage = async (imagePath) => {
+
+        // Use the uploaded file's name as the asset's public ID and 
+        // allow overwriting the asset with new versions
+        const options = {
+            folder: "Fotos de Registrados"
+        };
+    
+        try {
+          // Upload the image
+          const result = await cloudinary.uploader.upload(imagePath, options);
+          await fs.remove(req.file.path)
+          controladores.guardarImagen("fotos_usuarios",result.url)
+            .then((info) => {
+
+                success(req,res,{info,url: result.url},200)
+            })
+        } catch (error) {
+          console.error(error);
+        }
+    };
+    uploadImage(req.file.path)
+})
+
+router.get("/upload", (req,res) => {
+    controladores.obtenerImagenes()
+     .then((imagenes) => {
+        success(req, res, imagenes, 200)
+     })
+     .catch((err) => {
+        error(req, res, err.message, err.status)
+    })
 })
 
 router.get("/" , (req, res) => {
@@ -72,4 +111,15 @@ router.delete("/:id", (req, res) => {
         .catch((err) => {
             error(req, res, err.message, err.status)
         })
+})
+
+router.put('/sesion/:id', (req, res) => {
+    console.log(req.body);
+    controladores.sesion('usuarios',req.params.id,req.body)
+    .then((sesion) => {
+        success(req, res, sesion, 200)
+    })
+    .catch((err) => {
+        error(req, res, err.message, err.status)
+    })
 })
