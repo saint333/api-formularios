@@ -42,7 +42,6 @@ function imagen(table, data) {
                 if (err) {
                     return reject(err);
                 }
-                console.log(data);
                 resolve(data);
             }
         );
@@ -77,6 +76,33 @@ function obtener(table, id) {
             }
         );
     });
+}
+
+function obtenerForms(table, id) {
+    return new Promise((resolve, reject) => {
+        conexion.query(
+            `SELECT * FROM ${table} where usuarios_dni=${id}`,
+            (err, data) => {
+                if (err) return reject(err);
+                resolve(data);
+            }
+        );
+    });
+}
+
+function obtenerFormulario(id) {
+    return new Promise((resolve, reject) => {
+        conexion.query(
+            `SELECT * FROM formularios
+            inner join registros_totales_formularios on registros_totales_formularios.idformularios = ${id}
+            inner join extructura_formulario on extructura_formulario.idformularios = ${id}
+            where formularios.idformularios = ${id}`,
+            (err, data) => {
+                if (err) return reject(err);
+                resolve(data);
+            }
+        )
+    })
 }
 
 function crear(table, data) {
@@ -120,6 +146,108 @@ function sesion(tabla, id, valor) {
     })
 }
 
+function eliminarForms(table, datos) {
+    console.log(datos);
+    return new Promise((resolve, reject) => {
+        conexion.query(
+            `delete formularios, registros_totales_formularios, extructura_formulario 
+            from formularios 
+            inner join  registros_totales_formularios on registros_totales_formularios.idformularios = ${datos.id} 
+            inner join  extructura_formulario on extructura_formulario.idformularios = ${datos.id} 
+            where formularios.idformularios = ${datos.id} and usuarios_dni=${datos.dni}`,
+            (err, data) => {
+                if (err) return reject(err);
+                resolve(data);
+            }
+        );
+    });
+}
+
+function actualizarForms(table, data) {
+    return new Promise((resolve, reject) => {
+        conexion.query(
+            `UPDATE ${table} set cantidad_de_registro = ${data.cantidad} WHERE idformularios=${data.id} and usuarios_dni=${data.dni}`,
+            (err, data) => {
+                if (err) {
+                    return reject(err);
+                }
+                resolve(data);
+            }
+        );
+    });
+}
+
+async function crearForm(data) {
+    const data_1 = {
+        idformularios: data.id,
+        campos: JSON.stringify(data.campos),
+        diseno_general: JSON.stringify(data.diseno_general),
+        estructura: data.estructura,
+        estilo: data.estilo
+    }
+    let id_extructura = await extructuraForms(data_1)
+    const data_3 = {
+        idformularios: data.id,
+        campos_registro: JSON.stringify([]),
+        cantidad_registro: data.registro
+    }
+    await registroForms(data_3)
+    const data_2 = {
+        idformularios: data.id,
+        cantidad_de_registro: data.registro,
+        nombre_formulario: data.titulo,
+        fecha_creacion: data.fecha,
+        usuarios_dni: data.usuario,
+        idextructura_formulario: id_extructura.insertId
+    }
+    return new Promise((resolve, reject) => {
+        conexion.query(
+            `insert into formularios set ?`,
+            [data_2],
+            (err, data) => {
+                if (err) {
+                    console.log(err);
+                    return reject(err);
+                }
+                resolve(data);
+            }
+        );
+    });
+}
+
+function extructuraForms(data) {
+    return new Promise((resolve, reject) => {
+        conexion.query(
+            `insert into extructura_formulario (idformularios,campos, diseno_general, estructura, estilo) VALUES (?,?,?,?,?)`,
+            [data.idformularios,data.campos, data.diseno_general, data.estructura, data.estilo],
+            (err, data) => {
+                if (err) {
+                    return reject(err);
+                }
+                resolve(data);
+            }
+        );
+    });
+}
+
+function registroForms(data) {
+    return new Promise((resolve, reject) => {
+        conexion.query(
+            `INSERT INTO registros_totales_formularios (idformularios,campos_registro, cantidad_registro) VALUES (?, ?, ?)`,
+            [data.idformularios, data.campos_registro, data.cantidad_registro],
+            (err, data) => {
+                if (err) {
+                    return reject(err);
+                }
+                resolve(data);
+            }
+        );
+    });
+}
+
+// INSERT INTO `myforms`.`registros_totales_formularios` (`campos_registro`, `cantidad_registro`) VALUES (daadsa, afasfa);
+
+
 export const metodo = {
     listar,
     obtener,
@@ -127,5 +255,12 @@ export const metodo = {
     actualizar,
     imagen,
     getImagen,
-    sesion
+    sesion,
+    obtenerForms,
+    eliminarForms,
+    actualizarForms,
+    crearForm,
+    extructuraForms,
+    registroForms,
+    obtenerFormulario
 };
