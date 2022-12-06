@@ -48,7 +48,7 @@ router.post("/upload", multerUpload.single("file"), (req, res) => {
         controladores.guardarImagen("foto_usuario",result.url)
             .then((info) => {
 
-                success(req,res,{info,url: result.url},200)
+                success(req,res,{info,url: result.secure_url},200)
             })
         } catch (error) {
           console.error(error);
