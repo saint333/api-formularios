@@ -1,7 +1,8 @@
 import {metodos} from "../../../store/dummy.js"
 import { nanoid } from 'nanoid'
 
-const TABLA = "usuarios"
+// const TABLA = "usuarios"
+const TABLA = "usuario"
 
 export const controladores = (injectedStore) => {
     let metodo = injectedStore
@@ -35,7 +36,8 @@ export const controladores = (injectedStore) => {
     }
 
     function obtenerImagenes() {
-        return metodo.getImagen("fotos_usuarios")
+        // return metodo.getImagen("fotos_usuarios")
+        return metodo.getImagen("foto_usuario")
     }
 
     function sesion(tabla, id, data) {

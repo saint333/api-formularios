@@ -44,7 +44,8 @@ router.post("/upload", multerUpload.single("file"), (req, res) => {
           // Upload the image
           const result = await cloudinary.uploader.upload(imagePath, options);
           await fs.remove(req.file.path)
-          controladores.guardarImagen("fotos_usuarios",result.url)
+        //   controladores.guardarImagen("fotos_usuarios",result.url)
+        controladores.guardarImagen("foto_usuario",result.url)
             .then((info) => {
 
                 success(req,res,{info,url: result.url},200)
@@ -115,7 +116,8 @@ router.delete("/:id", (req, res) => {
 
 router.put('/sesion/:id', (req, res) => {
     console.log(req.body);
-    controladores.sesion('usuarios',req.params.id,req.body)
+    // controladores.sesion('usuarios',req.params.id,req.body)
+    controladores.sesion('usuario',req.params.id,req.body)
     .then((sesion) => {
         success(req, res, sesion, 200)
     })

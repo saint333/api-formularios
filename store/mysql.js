@@ -69,7 +69,7 @@ function listar(table) {
 function obtener(table, id) {
     return new Promise((resolve, reject) => {
         conexion.query(
-            `SELECT * FROM ${table} where dni=${id} or fotos_usuarios_idfotos_usuarios=${id}`,
+            `SELECT * FROM ${table} where dni=${id} or idfoto_usuario=${id}`,
             (err, data) => {
                 if (err) return reject(err);
                 resolve(data);
@@ -77,6 +77,8 @@ function obtener(table, id) {
         );
     });
 }
+
+// `SELECT * FROM ${table} where dni=${id} or idfoto_usuario=${id}`,
 
 function obtenerForms(table, id) {
     return new Promise((resolve, reject) => {
@@ -166,7 +168,10 @@ function eliminarForms(table, datos) {
 function actualizarForms(table, data) {
     return new Promise((resolve, reject) => {
         conexion.query(
-            `UPDATE ${table} set cantidad_de_registro = ${data.cantidad} WHERE idformularios=${data.id} and usuarios_dni=${data.dni}`,
+            `UPDATE ${table} set registros_totales_formularios = ${data.cantidad} WHERE idformularios=${data.id}
+            update formularios, registros_totales_formularios
+            set formularios.cantidad_de_registro = ${Number(data.cantidad) + 1}, registros_totales_formularios.cantidad_registro = ${Number(data.cantidad) + 1}, registros_totales_formularios.campos_registro = ${data.data}
+            where registros_totales_formularios.idformularios = ${data.id} and formularios.idformularios = ${data.id}`,
             (err, data) => {
                 if (err) {
                     return reject(err);
@@ -245,7 +250,21 @@ function registroForms(data) {
     });
 }
 
-// INSERT INTO `myforms`.`registros_totales_formularios` (`campos_registro`, `cantidad_registro`) VALUES (daadsa, afasfa);
+function updateRegistros(data,id) {
+    return new Promise((resolve, reject) => {
+        conexion.query(
+            `INSERT INTO registros_totales_formularios (idformularios,campos_registro, cantidad_registro) VALUES (?, ?, ?)`,
+            [data.idformularios, data.campos_registro, data.cantidad_registro],
+            (err, data) => {
+                if (err) {
+                    return reject(err);
+                }
+                resolve(data);
+            }
+        );
+    });
+}
+// UPDATE `myforms`.`registros_totales_formularios` SET `campos_registro` = [jidadj] WHERE (`idformularios` = '1669934273605');
 
 
 export const metodo = {

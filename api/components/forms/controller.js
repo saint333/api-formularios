@@ -23,7 +23,7 @@ export const controladores = (injectedStore) => {
     }
 
     function actualizarForm(data) {
-        return metodo.actualizarForms(TABLA, data)
+        return metodo.actualizarForms(data)
     }
 
     function borrarForms(datos){
