@@ -45,10 +45,10 @@ router.post("/upload", multerUpload.single("file"), (req, res) => {
           const result = await cloudinary.uploader.upload(imagePath, options);
           await fs.remove(req.file.path)
         //   controladores.guardarImagen("fotos_usuarios",result.url)
-        controladores.guardarImagen("foto_usuario",result.url)
+        controladores.guardarImagen("foto_usuario",result.secure_url)
             .then((info) => {
 
-                success(req,res,{info,url: result},200)
+                success(req,res,{info,url: result.secure_url},200)
             })
         } catch (error) {
           console.error(error);
