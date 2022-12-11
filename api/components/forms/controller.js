@@ -26,6 +26,17 @@ export const controladores = (injectedStore) => {
         return metodo.actualizarForms(data)
     }
 
+    function actualizarFormulario(data) {
+        const json = {
+            id: data.id,
+            campos: JSON.stringify(data.campos),
+            diseno_general: JSON.stringify(data.diseno_general),
+            estructura: data.estructura,
+            estilo: data.estilo
+        }
+        return metodo.actualizarFormu(json)
+    }
+
     function borrarForms(datos){
         return metodo.eliminarForms(TABLA, datos)
     }
@@ -35,6 +46,7 @@ export const controladores = (injectedStore) => {
         borrarForms,
         crearForms,
         actualizarForm,
-        getForms
+        getForms,
+        actualizarFormulario
     }
 }

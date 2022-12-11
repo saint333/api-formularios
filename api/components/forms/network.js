@@ -51,3 +51,12 @@ forms.post("/agregar/", (req, res) => {
     //         error(req, res, err.message, err.status)
     //     })
 })
+forms.put("/", (req, res) => {
+    controladores.actualizarFormulario(req.body)
+        .then((user) => {
+            success(req, res, user, 200)
+        })
+        .catch((err) => {
+            error(req, res, err.message, err.status)
+        })
+})

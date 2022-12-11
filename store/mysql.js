@@ -168,10 +168,28 @@ function eliminarForms(table, datos) {
 function actualizarForms(table, data) {
     return new Promise((resolve, reject) => {
         conexion.query(
-            `UPDATE ${table} set registros_totales_formularios = ${data.cantidad} WHERE idformularios=${data.id}
+            `
             update formularios, registros_totales_formularios
             set formularios.cantidad_de_registro = ${Number(data.cantidad) + 1}, registros_totales_formularios.cantidad_registro = ${Number(data.cantidad) + 1}, registros_totales_formularios.campos_registro = ${data.data}
             where registros_totales_formularios.idformularios = ${data.id} and formularios.idformularios = ${data.id}`,
+            (err, data) => {
+                if (err) {
+                    return reject(err);
+                }
+                resolve(data);
+            }
+        );
+    });
+}
+
+function actualizarFormu(data) {
+    console.log(data);
+    return new Promise((resolve, reject) => {
+        conexion.query(
+            `
+            update extructura_formulario
+            set campos = ?, diseno_general=?, estructura=?, estilo=?
+            where idformularios = ?`,[data.campos,data.diseno_general,data.estructura,data.estilo,data.id],
             (err, data) => {
                 if (err) {
                     return reject(err);
@@ -281,5 +299,6 @@ export const metodo = {
     crearForm,
     extructuraForms,
     registroForms,
-    obtenerFormulario
+    obtenerFormulario,
+    actualizarFormu
 };
