@@ -165,13 +165,14 @@ function eliminarForms(table, datos) {
     });
 }
 
-function actualizarForms(table, data) {
+function actualizarForms(data) {
     return new Promise((resolve, reject) => {
         conexion.query(
             `
             update formularios, registros_totales_formularios
-            set formularios.cantidad_de_registro = ${Number(data.cantidad) + 1}, registros_totales_formularios.cantidad_registro = ${Number(data.cantidad) + 1}, registros_totales_formularios.campos_registro = ${data.data}
+            set formularios.cantidad_de_registro = ?, registros_totales_formularios.cantidad_registro = ?, registros_totales_formularios.campos_registro = ?
             where registros_totales_formularios.idformularios = ${data.id} and formularios.idformularios = ${data.id}`,
+            [Number(data.cantidad) + 1,Number(data.cantidad) + 1,data.data],
             (err, data) => {
                 if (err) {
                     return reject(err);
