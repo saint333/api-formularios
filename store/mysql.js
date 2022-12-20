@@ -188,9 +188,9 @@ function actualizarFormu(data) {
     return new Promise((resolve, reject) => {
         conexion.query(
             `
-            update extructura_formulario
-            set campos = ?, diseno_general=?, estructura=?, estilo=?
-            where idformularios = ?`,[data.campos,data.diseno_general,data.estructura,data.estilo,data.id],
+            update extructura_formulario, formularios
+            set campos = ?, diseno_general=?, estructura=?, estilo=?, nombre_formulario=?
+            where extructura_formulario.idformularios = ? and formularios.idformularios = ?`,[data.campos,data.diseno_general,data.estructura,data.estilo,data.titulo,data.id,data.id],
             (err, data) => {
                 if (err) {
                     return reject(err);

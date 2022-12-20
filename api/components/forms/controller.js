@@ -32,7 +32,8 @@ export const controladores = (injectedStore) => {
             campos: JSON.stringify(data.campos),
             diseno_general: JSON.stringify(data.diseno_general),
             estructura: data.estructura,
-            estilo: data.estilo
+            estilo: data.estilo,
+            nombre: data.titulo
         }
         return metodo.actualizarFormu(json)
     }
