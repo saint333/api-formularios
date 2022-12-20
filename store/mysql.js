@@ -189,7 +189,7 @@ function actualizarFormu(data) {
         conexion.query(
             `
             update extructura_formulario, formularios
-            set campos = ?, diseno_general=?, estructura=?, estilo=?, nombre_formulario=?
+            set extructura_formulario.campos = ?, extructura_formulario.diseno_general=?, extructura_formulario.estructura=?, extructura_formulario.estilo=?, formularios.nombre_formulario=?
             where extructura_formulario.idformularios = ? and formularios.idformularios = ?`,[data.campos,data.diseno_general,data.estructura,data.estilo,data.titulo,data.id,data.id],
             (err, data) => {
                 if (err) {
